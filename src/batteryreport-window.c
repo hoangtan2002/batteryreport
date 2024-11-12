@@ -119,7 +119,7 @@ batterreport_window_read_device_info (gpointer data, gpointer user_data)
                 device_nominal_cap_str = (char*) calloc (20,sizeof(char));
                 device_current_cap_str = (char*) calloc (20,sizeof(char));
                 device_charge_cycles_str = (char*) calloc (20,sizeof(char));
-                device_health_str = (char*) calloc (5,sizeof(char));
+                device_health_str = (char*) calloc (20,sizeof(char));
 
                 sprintf(device_nominal_cap_str,"%.2f Wh",device_nominal_cap);
                 sprintf(device_current_cap_str,"%.2f Wh",device_current_cap);
@@ -145,7 +145,7 @@ batterreport_window_read_device_info (gpointer data, gpointer user_data)
                 batterreport_window_add_to_expander (row, "Design Capacity", device_nominal_cap_str);
                 batterreport_window_add_to_expander (row, "Current Capacity", device_current_cap_str);
                 batterreport_window_add_to_expander (row, "Health", device_health_str);
-                batterreport_window_add_to_expander (row, "Charge cycles", device_charge_cycles_str);
+                if (device_charge_cycles > 0) batterreport_window_add_to_expander (row, "Charge cycles", device_charge_cycles_str);
                 adw_preferences_group_add(self->battery_group,GTK_WIDGET (row));
                 break;
         case UP_DEVICE_KIND_LINE_POWER:
