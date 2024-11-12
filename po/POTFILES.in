@@ -1,0 +1,8 @@
+# List of source files containing translatable strings.
+# Please keep this file sorted alphabetically.
+data/com.tan.batteryreport.desktop.in
+data/com.tan.batteryreport.metainfo.xml.in
+data/com.tan.batteryreport.gschema.xml
+src/main.c
+src/batteryreport-window.c
+src/batteryreport-window.ui

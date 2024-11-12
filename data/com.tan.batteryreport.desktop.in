@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=batteryreport
+Exec=batteryreport
+Icon=com.tan.batteryreport
+Terminal=false
+Type=Application
+Categories=Utility;
+Keywords=GTK;
+StartupNotify=true
+DBusActivatable=true

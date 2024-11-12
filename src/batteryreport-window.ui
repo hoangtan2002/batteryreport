@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <requires lib="gtk" version="4.0"/>
+  <requires lib="Adw" version="1.0"/>
+  <template class="BatteryreportWindow" parent="AdwApplicationWindow">
+    <property name="title" translatable="yes">Batteryreport</property>
+    <property name="default-width">800</property>
+    <property name="default-height">600</property>
+    <property name="content">
+      <object class="AdwNavigationView" id="navigation_view">
+        <child>
+          <object class="AdwNavigationPage">
+            <property name="tag">landing_page</property>
+            <property name="title">Battery Report</property>
+            <property name="child">
+              <object class="AdwToolbarView">
+                <child type="top">
+                  <object class="AdwHeaderBar">
+                  </object>
+                </child>
+                <property name="content">
+                  <object class="GtkScrolledWindow">
+                    <child>
+                      <object class="GtkBox" id="toplevel_box">
+                        <property name="baseline-position">GTK_BASELINE_POSITION_CENTER</property>
+                        <property name="halign">GTK_ALIGN_FILL</property>
+                        <property name="orientation">GTK_ORIENTATION_VERTICAL</property>
+                        <property name="overflow">GTK_OVERFLOW_VISIBLE</property>
+                        <property name="margin-top">8</property>
+                        <property name="margin-bottom">8</property>
+                        <property name="margin-start">24</property>
+                        <property name="margin-end">24</property>
+                        <child>
+                          <object class="AdwClamp">
+                            <property name="maximum-size">600px</property>
+                            <property name="tightening-threshold">300px</property>
+                            <child>
+                              <object class="GtkBox">
+                                <property name="orientation">GTK_ORIENTATION_VERTICAL</property>
+                                <property name="spacing">24</property>
+                                <child>
+                                  <object class="AdwPreferencesGroup" id="battery_group">
+                                    <property name="description">Installed Batteries</property>
+                                    <property name="header-suffix">
+                                      <object class="GtkButton" id="save_button">
+                                        <style>
+                                          <class name="suggested-action"/>
+                                        </style>
+                                        <child>
+                                          <object class="AdwButtonContent">
+                                            <property name="icon-name">document-save-symbolic</property>
+                                            <property name="label">Save report</property>
+                                          </object>
+                                        </child>
+                                      </object>
+                                    </property>
+                                  </object>
+                                </child>
+                                <child>
+                                  <object class="AdwPreferencesGroup" id="ac_power_group">
+                                    <property name="description">AC Devices</property>
+                                  </object>
+                                </child>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                  </object>
+                </property>
+              </object>
+            </property>
+          </object>
+        </child>
+        <child>
+          <object class="AdwNavigationPage">
+            <property name="tag">battery-not-found-page</property>
+            <property name="child">
+              <object class="AdwToolbarView">
+                <child type="top">
+                  <object class="AdwHeaderBar"></object>
+                </child>
+                <property name="content">
+                  <object class="AdwStatusPage">
+                    <property name="icon-name">battery-missing</property>
+                    <property name="title">Battery Not Found</property>
+                    <property name="description">Can not find any batteries on this devices</property>
+                  </object>
+                </property>
+              </object>
+            </property>
+          </object>
+        </child>
+      </object>
+    </property>
+  </template>
+  <menu id="primary_menu">
+    <section>
+      <item>
+        <attribute name="label" translatable="yes">_Preferences</attribute>
+        <attribute name="action">app.preferences</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">_Keyboard Shortcuts</attribute>
+        <attribute name="action">win.show-help-overlay</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">_About Batteryreport</attribute>
+        <attribute name="action">app.about</attribute>
+      </item>
+    </section>
+  </menu>
+</interface>
