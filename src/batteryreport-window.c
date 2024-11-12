@@ -115,11 +115,11 @@ batterreport_window_read_device_info (gpointer data, gpointer user_data)
         switch (device_type) {
         case UP_DEVICE_KIND_BATTERY:
                 device_health = (int)(100*(device_current_cap/device_nominal_cap));
-                device_name = (char*) malloc ((strlen(device_vendor) + strlen(device_model) + 1)*sizeof(char));
-                device_nominal_cap_str = (char*) malloc (20*sizeof(char));
-                device_current_cap_str = (char*) malloc (20*sizeof(char));
-                device_charge_cycles_str = (char*) malloc (20*sizeof(char));
-                device_health_str = (char*) malloc (5*sizeof(char));
+                device_name = (char*) calloc ((strlen(device_vendor) + strlen(device_model) + 1), sizeof(char));
+                device_nominal_cap_str = (char*) calloc (20,sizeof(char));
+                device_current_cap_str = (char*) calloc (20,sizeof(char));
+                device_charge_cycles_str = (char*) calloc (20,sizeof(char));
+                device_health_str = (char*) calloc (5,sizeof(char));
 
                 sprintf(device_nominal_cap_str,"%.2f Wh",device_nominal_cap);
                 sprintf(device_current_cap_str,"%.2f Wh",device_current_cap);
