@@ -182,8 +182,9 @@ batterreport_window_add_to_expander(AdwExpanderRow  *row,
 {
         AdwActionRow* nested_row;
         nested_row = ADW_ACTION_ROW (adw_action_row_new ());
-        adw_preferences_row_set_title (ADW_PREFERENCES_ROW (nested_row), value);
-        adw_action_row_set_subtitle (nested_row, property);
+        adw_preferences_row_set_title (ADW_PREFERENCES_ROW (nested_row), property);
+        adw_action_row_set_subtitle (nested_row, value);
+        gtk_widget_add_css_class (GTK_WIDGET (nested_row), "property");
         adw_expander_row_add_row (row, GTK_WIDGET (nested_row));
 }
 

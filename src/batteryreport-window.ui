@@ -69,6 +69,24 @@
                     </child>
                   </object>
                 </property>
+                <child type="bottom">
+                  <object class="GtkActionBar">
+                    <property name="halign">GTK_ALIGN_START</property>
+                    <child type="start">
+                      <object class="GtkMenuButton">
+                        <property name="icon-name">dialog-warning</property>
+                      </object>
+                    </child>
+                    <child type="start">
+                      <object class="GtkLabel">
+                        <property name="label">Your battery is degraded!</property>
+                        <style>
+                          <class name="error"/>
+                        </style>
+                      </object>
+                    </child>
+                  </object>
+                </child>
               </object>
             </property>
           </object>
