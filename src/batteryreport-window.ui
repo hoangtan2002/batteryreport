@@ -72,6 +72,7 @@
                 <child type="bottom">
                   <object class="GtkActionBar">
                     <property name="halign">GTK_ALIGN_START</property>
+                    <property name="visible">False</property>
                     <child type="start">
                       <object class="GtkMenuButton">
                         <property name="icon-name">dialog-warning</property>

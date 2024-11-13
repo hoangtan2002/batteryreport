@@ -133,25 +133,25 @@ batterreport_window_read_device_info (gpointer data, gpointer user_data)
 
                 switch (device_tech) {
                 case UP_DEVICE_TECHNOLOGY_LITHIUM_ION:
-                        batterreport_window_add_to_expander (row, "Technology", "Lithium ion");
+                        batterryeport_window_add_to_expander (row, "Technology", "Lithium ion");
                         break;
                 case UP_DEVICE_TECHNOLOGY_LITHIUM_POLYMER:
-                        batterreport_window_add_to_expander (row, "Technology", "Lithium Polymer");
+                        batterryeport_window_add_to_expander (row, "Technology", "Lithium Polymer");
                         break;
                 default:
-                        batterreport_window_add_to_expander (row,"Technology:", "Unknown");
+                        batterryeport_window_add_to_expander (row,"Technology:", "Unknown");
                         break;
                 }
-                batterreport_window_add_to_expander (row, "Design Capacity", device_nominal_cap_str);
-                batterreport_window_add_to_expander (row, "Current Capacity", device_current_cap_str);
-                batterreport_window_add_to_expander (row, "Health", device_health_str);
-                if (device_charge_cycles > 0) batterreport_window_add_to_expander (row, "Charge cycles", device_charge_cycles_str);
+                batterryeport_window_add_to_expander (row, "Design Capacity", device_nominal_cap_str);
+                batterryeport_window_add_to_expander (row, "Current Capacity", device_current_cap_str);
+                batterryeport_window_add_to_expander (row, "Health", device_health_str);
+                if (device_charge_cycles > 0) batterryeport_window_add_to_expander (row, "Charge cycles", device_charge_cycles_str);
                 adw_preferences_group_add(self->battery_group,GTK_WIDGET (row));
                 break;
         case UP_DEVICE_KIND_LINE_POWER:
                 device_name = "AC Adapter";
                 row = batteryreport_window_new_row (device_name,icon_name);
-                batterreport_window_add_to_expander (row, "Status", is_online == TRUE ? "Plugged in" : "Unplugged");
+                batterryeport_window_add_to_expander (row, "Status", is_online == TRUE ? "Plugged in" : "Unplugged");
                 adw_preferences_group_add(self->ac_power_group,GTK_WIDGET (row));
                 break;
         default: break;
@@ -176,7 +176,7 @@ batteryreport_window_new_row (char* device_name, const char* icon_name)
 }
 
 void
-batterreport_window_add_to_expander(AdwExpanderRow  *row,
+batterryeport_window_add_to_expander(AdwExpanderRow  *row,
                                     char            *property,
                                     char            *value)
 {

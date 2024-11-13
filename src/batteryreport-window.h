@@ -40,7 +40,7 @@ AdwExpanderRow*
 batteryreport_window_new_row (char* device_name, const char* icon_name);
 
 void
-batterreport_window_add_to_expander(AdwExpanderRow  *row,
+batterryeport_window_add_to_expander(AdwExpanderRow  *row,
                                     char            *property,
                                     char            *value);
 
