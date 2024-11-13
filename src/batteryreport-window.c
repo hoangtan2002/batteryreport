@@ -135,18 +135,7 @@ batterreport_window_read_device_info (gpointer data, gpointer user_data)
                 strcat(device_name," ");
                 strcat(device_name,device_model);
                 row = batteryreport_window_new_row (device_name,icon_name);
-
-                switch (device_tech) {
-                case UP_DEVICE_TECHNOLOGY_LITHIUM_ION:
-                        batterryeport_window_add_to_expander (row, "Technology", "Lithium ion");
-                        break;
-                case UP_DEVICE_TECHNOLOGY_LITHIUM_POLYMER:
-                        batterryeport_window_add_to_expander (row, "Technology", "Lithium Polymer");
-                        break;
-                default:
-                        batterryeport_window_add_to_expander (row,"Technology:", "Unknown");
-                        break;
-                }
+                batterryeport_window_add_to_expander (row, "Technology", up_device_technology_to_string (device_tech));
                 batterryeport_window_add_to_expander (row, "Design Capacity", device_nominal_cap_str);
                 batterryeport_window_add_to_expander (row, "Current Capacity", device_current_cap_str);
                 batterryeport_window_add_to_expander (row, "Health", device_health_str);
