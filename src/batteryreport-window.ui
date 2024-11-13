@@ -70,7 +70,7 @@
                   </object>
                 </property>
                 <child type="bottom">
-                  <object class="GtkActionBar">
+                  <object class="GtkActionBar" id="action_bar">
                     <property name="halign">GTK_ALIGN_START</property>
                     <property name="visible">False</property>
                     <child type="start">

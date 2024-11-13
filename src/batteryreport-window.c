@@ -29,10 +29,10 @@ struct _BatteryreportWindow
 
 	/* Template widgets */
         AdwNavigationView *navigation_view;
-        AdwPreferencesGroup* battery_group;
-        AdwPreferencesGroup* ac_power_group;
+        AdwPreferencesGroup *battery_group;
+        AdwPreferencesGroup *ac_power_group;
         GtkButton *save_button;
-
+        GtkActionBar *action_bar;
         UpClient* client_object;
 };
 
@@ -48,6 +48,7 @@ batteryreport_window_class_init (BatteryreportWindowClass *klass)
         gtk_widget_class_bind_template_child (widget_class, BatteryreportWindow, battery_group);
         gtk_widget_class_bind_template_child (widget_class, BatteryreportWindow, ac_power_group);
         gtk_widget_class_bind_template_child (widget_class, BatteryreportWindow, save_button);
+        gtk_widget_class_bind_template_child (widget_class, BatteryreportWindow, action_bar);
 }
 
 static void
@@ -55,6 +56,10 @@ batteryreport_window_init (BatteryreportWindow *self)
 {
         g_autoptr (GPtrArray) up_client_devices;
 	gtk_widget_init_template (GTK_WIDGET (self));
+        g_signal_connect (self->save_button,
+                          "clicked",
+                          G_CALLBACK(batteryreport_window_export_report),
+                          self->client_object);
         self->client_object = up_client_new ();
         if(!self->client_object){
                 batteryreport_window_show_not_found_page (self);
@@ -146,6 +151,7 @@ batterreport_window_read_device_info (gpointer data, gpointer user_data)
                 batterryeport_window_add_to_expander (row, "Current Capacity", device_current_cap_str);
                 batterryeport_window_add_to_expander (row, "Health", device_health_str);
                 if (device_charge_cycles > 0) batterryeport_window_add_to_expander (row, "Charge cycles", device_charge_cycles_str);
+                if (device_health <= 50 ) gtk_widget_set_visible (GTK_WIDGET (self->action_bar),TRUE);
                 adw_preferences_group_add(self->battery_group,GTK_WIDGET (row));
                 break;
         case UP_DEVICE_KIND_LINE_POWER:
@@ -192,6 +198,10 @@ static void
 batteryreport_window_export_report (GtkButton* button,
                                     gpointer user_data)
 {
+        GtkButton* self = button;
+        UpClient* client = UP_CLIENT (user_data);
+        g_print("Button clicked");
+        if(client == NULL) return;
 
 }
 
