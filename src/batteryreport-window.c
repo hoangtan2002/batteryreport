@@ -23,11 +23,15 @@
 #include "batteryreport-window.h"
 #include <libupower-glib/upower.h>
 
+#include <time.h>
+
 struct _BatteryreportWindow
 {
 	AdwApplicationWindow  parent_instance;
 
 	/* Template widgets */
+        AdwToastOverlay *toast_overlay;
+
         AdwNavigationView *navigation_view;
         AdwPreferencesGroup *battery_group;
         AdwPreferencesGroup *ac_power_group;
@@ -44,6 +48,7 @@ batteryreport_window_class_init (BatteryreportWindowClass *klass)
 	GtkWidgetClass *widget_class = GTK_WIDGET_CLASS (klass);
 
 	gtk_widget_class_set_template_from_resource (widget_class, "/com/tan/batteryreport/batteryreport-window.ui");
+        gtk_widget_class_bind_template_child (widget_class, BatteryreportWindow, toast_overlay);
 	gtk_widget_class_bind_template_child (widget_class, BatteryreportWindow, navigation_view);
         gtk_widget_class_bind_template_child (widget_class, BatteryreportWindow, battery_group);
         gtk_widget_class_bind_template_child (widget_class, BatteryreportWindow, ac_power_group);
@@ -59,7 +64,7 @@ batteryreport_window_init (BatteryreportWindow *self)
         g_signal_connect (self->save_button,
                           "clicked",
                           G_CALLBACK(batteryreport_window_export_report),
-                          self->client_object);
+                          self);
         self->client_object = up_client_new ();
         if(!self->client_object){
                 batteryreport_window_show_not_found_page (self);
@@ -139,8 +144,8 @@ batterreport_window_read_device_info (gpointer data, gpointer user_data)
                 batterryeport_window_add_to_expander (row, "Design Capacity", device_nominal_cap_str);
                 batterryeport_window_add_to_expander (row, "Current Capacity", device_current_cap_str);
                 batterryeport_window_add_to_expander (row, "Health", device_health_str);
-                if (device_charge_cycles > 0) batterryeport_window_add_to_expander (row, "Charge cycles", device_charge_cycles_str);
-                if (device_health <= 50 ) gtk_widget_set_visible (GTK_WIDGET (self->action_bar),TRUE);
+                if (device_charge_cycles >= 0) batterryeport_window_add_to_expander (row, "Charge cycles", device_charge_cycles_str);
+                if (device_health <= 50 ) batteryreport_window_makr_as_degraded (row);
                 adw_preferences_group_add(self->battery_group,GTK_WIDGET (row));
                 break;
         case UP_DEVICE_KIND_LINE_POWER:
@@ -158,22 +163,29 @@ batterreport_window_read_device_info (gpointer data, gpointer user_data)
 
 }
 
+static void
+batterreport_window_write_device_info_to_buffer (gpointer data, gpointer user_data)
+{
+
+}
+
 AdwExpanderRow*
 batteryreport_window_new_row (char* device_name, const char* icon_name)
 {
         AdwExpanderRow *row;
-        GtkImage *icon;
+        GtkImage *prefix_icon;
         row = ADW_EXPANDER_ROW (adw_expander_row_new ());
-        icon = GTK_IMAGE (gtk_image_new_from_icon_name (icon_name));
+        prefix_icon = GTK_IMAGE (gtk_image_new_from_icon_name (icon_name));
         adw_preferences_row_set_title (ADW_PREFERENCES_ROW (row),device_name);
-        adw_expander_row_add_prefix (row,GTK_WIDGET (icon));
+        adw_expander_row_add_prefix (row,GTK_WIDGET (prefix_icon));
+        //gtk_widget_set_visible ()
         return row;
 }
 
 void
-batterryeport_window_add_to_expander(AdwExpanderRow  *row,
-                                    char            *property,
-                                    char            *value)
+batterryeport_window_add_to_expander (AdwExpanderRow  *row,
+                                      char            *property,
+                                      char            *value)
 {
         AdwActionRow* nested_row;
         nested_row = ADW_ACTION_ROW (adw_action_row_new ());
@@ -183,15 +195,70 @@ batterryeport_window_add_to_expander(AdwExpanderRow  *row,
         adw_expander_row_add_row (row, GTK_WIDGET (nested_row));
 }
 
+void
+batteryreport_window_makr_as_degraded (AdwExpanderRow* row)
+{
+        GtkImage *suffix_icon;
+        suffix_icon = GTK_IMAGE (gtk_image_new_from_icon_name ("dialog-warning"));
+        adw_expander_row_add_suffix (row,GTK_WIDGET (suffix_icon));
+}
+
 static void
 batteryreport_window_export_report (GtkButton* button,
                                     gpointer user_data)
 {
-        GtkButton* self = button;
-        UpClient* client = UP_CLIENT (user_data);
-        g_print("Button clicked");
-        if(client == NULL) return;
+        BatteryreportWindow* window = BATTERYREPORT_WINDOW (user_data);
+        g_autoptr (GtkFileDialog) dialog;
 
+        time_t rawtime;
+        struct tm *info;
+        char *buffer;
+
+        buffer = (char*) malloc (sizeof(char)*100);
+        time(&rawtime);
+        info = localtime(&rawtime);
+        strftime(buffer, 100, "report_%d-%m-%Y_%I:%M:%S%p.txt", info);
+
+        dialog = gtk_file_dialog_new ();
+        gtk_file_dialog_set_initial_name (dialog, buffer);
+        gtk_file_dialog_save (dialog,
+                              GTK_WINDOW (window),
+                              NULL,
+                              batteryreport_window_write_report,
+                              window);
+
+}
+
+static void
+batteryreport_window_write_report (GObject *source,
+                                   GAsyncResult* result,
+                                   gpointer user_data)
+{
+        GtkFileDialog *dialog = GTK_FILE_DIALOG (source);
+        BatteryreportWindow *self = BATTERYREPORT_WINDOW (user_data);
+        GError *error = NULL;
+        GPtrArray* up_client_devices;
+        g_autoptr (GOutputStream) writer;
+
+        g_autoptr (GFile) file =
+        gtk_file_dialog_save_finish (dialog, result, &error);
+
+        if (file == NULL){
+                return;
+        }
+
+        g_print ("You opened: %s\n",g_file_get_path (file));
+
+
+
+        //writer = g_buffered_output_stream_new (GOutputStream *base_stream)
+        up_client_devices = up_client_get_devices2 (self->client_object);
+
+        g_ptr_array_foreach (up_client_devices,
+                             batterreport_window_write_device_info_to_buffer,
+                             self);
+
+        return;
 }
 
 

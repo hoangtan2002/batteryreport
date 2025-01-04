@@ -36,15 +36,25 @@ batteryreport_window_show_not_found_page (BatteryreportWindow *self);
 static void
 batterreport_window_read_device_info (gpointer data, gpointer user_data);
 
+static void
+batterreport_window_write_device_info_to_buffer (gpointer data, gpointer user_data);
+
 AdwExpanderRow*
 batteryreport_window_new_row (char* device_name, const char* icon_name);
 
 void
-batterryeport_window_add_to_expander(AdwExpanderRow  *row,
-                                    char            *property,
-                                    char            *value);
+batterryeport_window_add_to_expander (AdwExpanderRow  *row,
+                                      char            *property,
+                                      char            *value);
+
+void
+batteryreport_window_makr_as_degraded (AdwExpanderRow* row);
 
 static void
 batteryreport_window_export_report (GtkButton* button,
                                     gpointer user_data);
+static void
+batteryreport_window_write_report (GObject* source,
+                                   GAsyncResult* result,
+                                   gpointer user_data);
 
